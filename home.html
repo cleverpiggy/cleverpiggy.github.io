@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Wes Game</title>
+            <style type="text/css">
+
+            body {font-family: Arial, Helvetica, sans-serif;}
+            * {box-sizing: border-box;}
+
+            input[type=text] {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                margin-top: 8px;
+                margin-bottom: 3px;
+                resize: vertical;
+            }
+
+            input[type=text] {
+                width: 100%;
+            }
+
+            button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #45a049;
+            }
+            .form-section {
+                margin-top: 14px;
+                margin-bottom: 14px;
+            }
+
+            .form-box {
+                border: solid;
+                border-width: 1px;
+                background-color: #f2f2f2;
+                padding: 5px;
+                display: flex;
+            }
+            .errors {
+                color: red;
+            }
+
+        </style>
+    </head>
+    <body>
+            <h3>Pool <span id="pool">25</span></h3>
+        <div class="form-box">
+            <form>
+                <label for="name">Name</label>
+                <br>
+                <input type="text" name="name">
+                <br>
+                <label for="attack">Attack</label>
+                <br>
+                <input type="range" min="1" max="25" value="1" class="slider" name="attack" oninput="range('attack')">
+                <label id="attack">1</label>
+                <br>
+                <label for="defense">Defense</label>
+                <br>
+                <input type="range" min="0" max="25" value="0" class="slider" name="defense" oninput="range('defense')">
+                <label id="defense">0</label>
+                <br>
+                <label for="hps">Hps</label>
+                <br>
+                <input type="range" min="1" max="25" value="1" class="slider" name="hps" oninput="range('hps')">
+                <label id="hps">1</label>
+                <br>
+                <label for="speed">Speed</label>
+                <br>
+                <input type="range" min="0" max="25" value="0" class="slider" name="speed" oninput="range('speed')">
+                <label id="speed">0</label>
+                <br>
+            </form>
+        </div>
+        <button type="button" onclick="play()">Play</button>
+        <div>
+
+        </div>
+    </body>
+    <script type="text/javascript" src="game.js"></script>
+</html>
