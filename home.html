@@ -17,10 +17,6 @@
                 resize: vertical;
             }
 
-            input[type=text] {
-                width: 100%;
-            }
-
             button {
                 background-color: #4CAF50;
                 color: white;
@@ -31,10 +27,6 @@
 
             button:hover {
                 background-color: #45a049;
-            }
-            .form-section {
-                margin-top: 14px;
-                margin-bottom: 14px;
             }
 
             .form-box {
@@ -48,10 +40,40 @@
                 color: red;
             }
 
+            .pool {
+                margin-top: 100px;
+                margin-left: 30px;
+                float: right;
+            }
+
+            .output {
+                visibility: hidden;
+            }
+
+            .game-stats {
+                display: inline-table;
+                font-size: 20px;
+                padding: 10px;
+                border-radius: 15px;
+            }
+            .versus {
+                display: inline-table;
+                padding: 30px;
+                color:  blue;
+            }
+
+            #attack-info {
+                text-align: center;
+                padding-top: 10px;
+                font-style: italic;
+            }
+            #game-area {
+                width: fit-content;
+            }
+
         </style>
     </head>
     <body>
-            <h3>Pool <span id="pool">25</span></h3>
         <div class="form-box">
             <form>
                 <label for="name">Name</label>
@@ -78,12 +100,63 @@
                 <input type="range" min="0" max="25" value="0" class="slider" name="speed" oninput="range('speed')">
                 <label id="speed">0</label>
                 <br>
+                <button type="button" onclick="play()">Play</button>
             </form>
+            <h3 class=pool>Pool <span id="pool">25</span></h3>
         </div>
-        <button type="button" onclick="play()">Play</button>
-        <div>
-
+        <div id="game-area">
+        <div class="game-stats output" id="hero">
+            <table>
+                <tr>
+                    <th class="name">Allen</th>
+                </tr>
+                <tr>
+                    <td>Attack</td>
+                    <td class="attack">8</td>
+                </tr>
+                <tr>
+                    <td>Defense</td>
+                    <td class="defense">8</td>
+                </tr>
+                <tr>
+                    <td>Hps</td>
+                    <td class="hps">4</td>
+                </tr>
+                <tr>
+                    <td>Speed</td>
+                    <td class="speed">0</td>
+                </tr>
+            </table>
         </div>
+        <div class="versus output">
+            <h2>VS</h2>
+        </div>
+        <div class="game-stats output" id="villian">
+            <table>
+                <tr>
+                    <th class="name">Wesley</th>
+                </tr>
+                <tr>
+                    <td>Attack</td>
+                    <td class="attack">8</td>
+                </tr>
+                <tr>
+                    <td>Defense</td>
+                    <td class="defense">8</td>
+                </tr>
+                <tr>
+                    <td>Hps</td>
+                    <td class="hps">4</td>
+                </tr>
+                <tr>
+                    <td>Speed</td>
+                    <td class="speed">0</td>
+                </tr>
+            </table>
+        </div>
+        <div id="attack-info">
+        </div>
+    </div>
     </body>
     <script type="text/javascript" src="game.js"></script>
 </html>
