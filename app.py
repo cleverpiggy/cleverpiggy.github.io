@@ -13,7 +13,7 @@ import redis
 # grab the .env values to use globably in this module
 _vals = dotenv_values()
 REDIS_PASS = _vals['PASS']
-REDIS_ENDPOINT = _vals['ENDPOINT']
+REDIS_HOST = _vals['HOST']
 REDIS_PORT = _vals['PORT']
 
 POOL = 25
@@ -76,7 +76,7 @@ def error_handler(error):
 
 class Store:
     def __init__(self):
-        self.redis = redis.Redis(host=REDIS_ENDPOINT, port=REDIS_PORT, password=REDIS_PASS)
+        self.redis = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
 
     @contextmanager
     def get_queue(self):

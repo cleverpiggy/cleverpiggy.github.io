@@ -36,7 +36,7 @@
                 padding: 5px;
                 display: flex;
             }
-            .errors {
+            .error {
                 color: red;
             }
 
@@ -100,7 +100,10 @@
                 <input type="range" min="0" max="25" value="0" class="slider" name="speed" oninput="range('speed')">
                 <label id="speed">0</label>
                 <br>
-                <button type="button" onclick="play()">Play</button>
+                <button type="button" onclick="initiateMatch('computer')">Play Computer</button>
+                <button type="button" onclick="initiateMatch('human')">Play Human</button>
+                <br>
+                <label class="error">Can't find a human.  Try again</label>
             </form>
             <h3 class=pool>Pool <span id="pool">25</span></h3>
         </div>

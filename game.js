@@ -4,7 +4,8 @@ const POOL = 25;
 
 // ---------------------------- game logic ------------------------------------------
 
-function play(p1, p2) {
+// villian: 'human' or 'computer'
+function initiateMatch(villian) {
 
     if (parseInt(document.getElementById("pool").innerHTML) > 0) {
         alert("Allocate the rest of your pool first!");
@@ -16,8 +17,18 @@ function play(p1, p2) {
         alert("Enter a name please!");
         return;
     }
-    const them = getOpponentStats();
 
+    getOpponentStats(villian, me)
+        .then(opponent => {
+            if (!opponent) {
+                console.log('failed to find opponent');
+            } else {
+                play(me, opponent);
+            }
+        });
+}
+
+function play(me, them) {
     showGame(me, them);
     const actionSeq = fight(me, them);
     if (!actionSeq) {
@@ -92,12 +103,18 @@ function attack(attacker, defender) {
     };
 }
 
-function getOpponentStats() {
-    return randomFoe();
+// stats: hero stats
+// Omitting the parameter is the flag for using the computer opponent.
+function getOpponentStats(villian, stats) {
+    if (villian == "computer") {
+        return new Promise((resolve, reject) => resolve(randomFoe()));
+    }
+    // TODO:  Here we do an http fetch to get the actual opponent
+    return new Promise((resolve, reject) => resolve(null));
 }
 
 function randomFoe() {
-    const output = {name: "foe", id: "villian", attack: 1, defense: 0, hps: 1, speed: 0};
+    const output = {name: "foe", who: "villian", attack: 1, defense: 0, hps: 1, speed: 0};
     // Each position corresponds the same position in ATTRIBUTES.
     const ratios = ATTRIBUTES.map(_ => Math.random());
     const tot = ratios.reduce((a, b) => a + b);
@@ -137,7 +154,7 @@ function animateOrder(first, second) {
 function animateAttack(attk) {
     console.log(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
     attackMessage(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
-    flashDamage(attk.defender.id);
+    flashDamage(attk.defender.who);
     reduceHps(attk.defender);
 }
 
@@ -161,7 +178,7 @@ function fillTable(tableId, stats) {
     const table = document.getElementById(tableId);
     for (let name in stats) {
         let elements = table.getElementsByClassName(name);
-        // This will skip the 'id' field which doesn't apply and any additional that are added.
+        // This will skip the 'type' field and any additional non applicable fields that are added.
         if (elements.length == 1) {
             elements[0].innerHTML = stats[name];
         }
@@ -172,10 +189,10 @@ function attackMessage(mssg) {
     document.getElementById("attack-info").innerHTML = mssg;
 }
 
-// id: "hero" / "villian"
-function flashDamage(id) {
+// who: "hero" / "villian"
+function flashDamage(who) {
     unflashDamage();
-    document.getElementById(id).style.backgroundColor = "red";
+    document.getElementById(who).style.backgroundColor = "red";
 }
 
 function unflashDamage() {
@@ -185,7 +202,7 @@ function unflashDamage() {
 
 function reduceHps(defender) {
     const element = document
-        .getElementById(defender.id)
+        .getElementById(defender.who)
         .getElementsByClassName("hps")[0];
     element.innerHTML = defender.hps;
 }
@@ -194,7 +211,7 @@ function extractStats() {
     var formElement = document.querySelector("form");
     var formData = new FormData(formElement);
     const data = Object.fromEntries(formData.entries());
-    data.id = "hero";
+    data.who = "hero";
     return data;
 }
 
