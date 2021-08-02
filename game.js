@@ -1,13 +1,24 @@
 const ATTRIBUTES = ["attack", "defense", "hps", "speed"];
-const POOL = 25;
+const POOL = 30;
+document.getElementById("pool").innerHTML = POOL;
+ATTACK_TIME = 2500;
 
+const MATCH_URL = "http://127.0.0.1:5000/match"
 
+// Global varibable that mutates every time we edit the stats.
+// That way multiple requests with the same stats don't all
+// post to the server.
+var postId;
+
+function updateId() {
+    postId = generateId();
+    console.log(postId);
+}
 // ---------------------------- game logic ------------------------------------------
 
-// villian: 'human' or 'computer'
-function initiateMatch(villian) {
-
-    if (parseInt(document.getElementById("pool").innerHTML) > 0) {
+// villain: 'human' or 'computer'
+function play(villain) {
+    if (getPool() > 0) {
         alert("Allocate the rest of your pool first!");
         return;
     }
@@ -18,24 +29,38 @@ function initiateMatch(villian) {
         return;
     }
 
-    getOpponentStats(villian, me)
+    if (villain == "computer") {
+        return playCallback(me, randomFoe())
+    }
+
+    // We may send many requests for an opponent.  The id is used
+    // to insure our stats are only posted once.
+    me.id = postId;
+
+    matchup(me)
         .then(opponent => {
             if (!opponent) {
+                noHumanMessage(true);
                 console.log('failed to find opponent');
             } else {
-                play(me, opponent);
+                noHumanMessage(false);
+                playCallback(me, opponent);
             }
         });
 }
 
-function play(me, them) {
+function playCallback(me, them) {
+    // The animation functions want these labels.
+    me.who = "hero";
+    them.who = "villain";
     showGame(me, them);
     const actionSeq = fight(me, them);
     if (!actionSeq) {
         alert("You have the same allocations!  Try again.");
         return;
     }
-    const delay = timeout(1500, 1000);
+    const delay = timeout(ATTACK_TIME, 0);
+    delay(prelude, []);
     delay(animateOrder, [actionSeq[0].attacker, actionSeq[0].defender]);
     for (let attack of actionSeq) {
         delay(animateAttack, [attack]);
@@ -103,18 +128,29 @@ function attack(attacker, defender) {
     };
 }
 
-// stats: hero stats
-// Omitting the parameter is the flag for using the computer opponent.
-function getOpponentStats(villian, stats) {
-    if (villian == "computer") {
-        return new Promise((resolve, reject) => resolve(randomFoe()));
-    }
+// returns a promise
+// stats: hero stats to post to the server
+function matchup(stats) {
     // TODO:  Here we do an http fetch to get the actual opponent
-    return new Promise((resolve, reject) => resolve(null));
+    return fetch(MATCH_URL, {
+        method: "POST",
+        body: JSON.stringify(stats),
+        headers: {'Content-Type': 'application/json'}
+    })
+        .then(response => response.json())
+        .then(response => response.success ? intify(response.villain) : null);
+}
+
+function intify(stats) {
+    console.log('intify', stats);
+    for (attr of ATTRIBUTES) {
+        stats[attr] = parseInt(stats[attr]);
+    }
+    return stats;
 }
 
 function randomFoe() {
-    const output = {name: "foe", who: "villian", attack: 1, defense: 0, hps: 1, speed: 0};
+    const output = {name: "foe", who: "villain", attack: 1, defense: 0, hps: 1, speed: 0};
     // Each position corresponds the same position in ATTRIBUTES.
     const ratios = ATTRIBUTES.map(_ => Math.random());
     const tot = ratios.reduce((a, b) => a + b);
@@ -140,33 +176,73 @@ function randomFoe() {
 
 // ------------------------------ ui / display ----------------------------------
 
+function nextAttackFactory(className) {
+    const gifs = document.getElementsByClassName(className);
+    const attacks = [...gifs].filter(n => n.classList.contains("attack"));
+    var cursor = attacks.length - 1;
+    return function () {
+        for (let gif of gifs) {
+            gif.hidden = true;
+        }
+        cursor = (cursor + 1) % attacks.length;
+        attacks[cursor].hidden = false;
+        reanimateGif(attacks[cursor]);
+    }
+}
+
+const showAttackGif = {
+    hero: nextAttackFactory('hero-gif'),
+    villain: nextAttackFactory('villain-gif'),
+};
+
+function reanimateGif(gif) {
+    // This is just how you do it /shrug.
+    const src = gif.src;
+    gif.src = ""
+    gif.src = src;
+}
+
+function prelude() {
+    for (element of document.getElementsByClassName("attack")) {
+        element.hidden = true;
+    }
+    document.getElementsByClassName("hero-gif dodge")[0].hidden = false;
+    document.getElementsByClassName("villain-gif dodge")[0].hidden = false;
+}
+
 function animateOrder(first, second) {
     if (first.speed == second.speed) {
         console.log(`Equal speeds, ${first.name} wins the flip`);
-        attackMessage(`Equal speeds, ${first.name} wins the flip`);
+        actionLog("Equal speeds, flipping a coin...")
+        actionLog(`${first.name} wins the flip`);
     } else {
         console.log(`${first.name} goes first`);
-        attackMessage(`${first.name} goes first`);
+        actionLog(`${first.name} goes first`);
     }
 }
 
 // attack {attacker, defender, damage}
 function animateAttack(attk) {
-    console.log(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
-    attackMessage(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
-    flashDamage(attk.defender.who);
-    reduceHps(attk.defender);
+    showAttackGif[attk.attacker.who]();
+    setTimeout(() => {
+        console.log(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
+        actionLog(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
+        setHps(attk.defender.who, attk.defender.hps, true);
+    }, ATTACK_TIME);
 }
 
 function animateWin(winner) {
     console.log(`${winner.name} wins!`);
-    attackMessage(`${winner.name} wins!`);
+    actionLog(`${winner.name} wins!`);
 }
 
-function showGame(heroStats, villianStats) {
+function showGame(heroStats, villainStats) {
 
+    clearLog();
     fillTable("hero", heroStats);
-    fillTable("villian", villianStats);
+    fillTable("villain", villainStats);
+    setHps("hero", heroStats.hps);
+    setHps("villain", villainStats.hps);
     for (let e of document.getElementsByClassName("output")) {
         e.style.visibility = "visible";
     }
@@ -185,38 +261,50 @@ function fillTable(tableId, stats) {
     }
 }
 
-function attackMessage(mssg) {
-    document.getElementById("attack-info").innerHTML = mssg;
+function setHps(who, amount, damage) {
+    const id = (who == "hero") ? "hero-hps" : "villain-hps";
+    const hpsEle = document.getElementById(id);
+    hpsEle.innerHTML = amount;
+    // Have the guy whos hps went down flash red for a second.
+    if (damage) {
+        hpsEle.style.color = "red";
+        setTimeout(() => hpsEle.style.color = "black", 1000);
+    }
 }
 
-// who: "hero" / "villian"
+// Add a span element with the mssg and a line break to the action log.
+function actionLog(mssg) {
+    const line = document.createElement('span');
+    line.innerHTML = mssg;
+    const log = document.getElementById("action-log");
+    log.appendChild(document.createElement('br'));
+    log.appendChild(line);
+}
+
+function clearLog() {
+    document.getElementById("action-log").innerHTML = "";
+}
+
+function noHumanMessage(is_active) {
+    const ele = document.getElementById("no-human").hidden = !is_active;
+}
+
 function flashDamage(who) {
-    unflashDamage();
-    document.getElementById(who).style.backgroundColor = "red";
-}
-
-function unflashDamage() {
-    document.getElementById("hero").style.backgroundColor = "";
-    document.getElementById("villian").style.backgroundColor = "";
-}
-
-function reduceHps(defender) {
-    const element = document
-        .getElementById(defender.who)
-        .getElementsByClassName("hps")[0];
-    element.innerHTML = defender.hps;
+    ;
 }
 
 function extractStats() {
-    var formElement = document.querySelector("form");
-    var formData = new FormData(formElement);
-    const data = Object.fromEntries(formData.entries());
-    data.who = "hero";
-    return data;
+    const stats = {};
+    var statElement = document.getElementById("stat-input");
+    for (element of statElement.getElementsByTagName("input")) {
+        stats[element.name] = element.value;
+    }
+    return stats;
 }
 
 // Custom 'oninput' functionality for the html range sliders
 function range(name) {
+    updateId();
     const sliders = document.getElementsByClassName('slider');
     // Subtract all the slider values from the remaining pool except the one
     // that has been updated.  Hang on the thisSlider.
@@ -246,6 +334,9 @@ function range(name) {
     document.getElementById("pool").innerHTML = remaining;
 }
 
+function getPool() {
+    return parseInt(document.getElementById("pool").innerHTML;
+}
 
 //-------------------------------- utils ----------------------------------------
 
@@ -256,6 +347,11 @@ function flipCoin() {
     return 1;
 }
 
+// I'll just do an iteger from 0 to billion.
+function generateId() {
+    return Math.round(Math.random() * 1000000000);
+}
+
 // Return a settimeout function that increments its
 // timeout every call.  Optionally set an initial timeout
 // with the second parameter.  Otherwise the first call
@@ -263,7 +359,8 @@ function flipCoin() {
 function timeout(increment, initial) {
     var t = (initial) ? initial : 0;
     var output = function(callback, args) {
-        setTimeout(callback, t, ...args);
+        const args_ = args ? args : [];
+        setTimeout(callback, t, ...args_);
         t += increment;
     }
     return output;

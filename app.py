@@ -16,7 +16,8 @@ REDIS_PASS = _vals['PASS']
 REDIS_HOST = _vals['HOST']
 REDIS_PORT = _vals['PORT']
 
-POOL = 25
+POOL = 30
+FIELDS = ("attack", "defense", "hps", "speed")
 
 app = Flask(__name__)
 
@@ -27,7 +28,8 @@ def match():
     stats = request.json
     if not stats:
         abort(422, description='json required')
-    if not verify(stats):
+    stats = verify_and_intify(stats)
+    if stats is None:
         abort(422, description='invalid stats')
 
     store = Store()
@@ -43,25 +45,38 @@ def match():
         store.store_queue(queue)
     if not opponent:
         return jsonify({'success': False})
-    return jsonify({'success': True, 'villian': opponent})
+    return jsonify({'success': True, 'villain': opponent})
 
 
-def verify(stats, fields=("attack", "defense", "hps", "speed")):
+def verify_and_intify(stats, fields=FIELDS):
 
+    print(stats)
+
+    if not "name" in stats and not "id" in stats:
+        print('1')
+        return None
     if not all(f in stats for f in fields):
-        return False
-    if not "name" in stats and "id" in stats:
-        return False
-    try:
-        assert sum(int(stats[f]) for f in fields) == POOL
-    except (ValueError, AssertionError):
-        return False
+        print('2')
+        return None
+    if not all(stats[f].isdigit() for f in fields):
+        print('3')
+        return None
+
+    # the intify part
     for f in fields:
-        if int(stats[f]) < 0:
-            return False
+        stats[f] = int(stats[f])
+
+    if not sum(stats[f] for f in fields) == POOL:
+        print('4')
+        return None
+    if not all(stats[f] >= 0 for f in fields):
+        print('5')
+        return None
     if stats['attack'] < 1 or stats['hps'] < 1:
-        return False
-    return True
+        print('6')
+        return None
+
+    return stats
 
 
 @app.errorhandler(HTTPException)
@@ -99,6 +114,8 @@ class Store:
 
 
 class Queue:
+    MAX_USED = 100
+    MAX_QUEUE = 100
     def __init__(self):
         self.data = OrderedDict()
         self._used = set()
@@ -107,6 +124,13 @@ class Queue:
         return entry['id'] not in self._used
 
     def push(self, entry):
+        # The method I'm using probablly doesn't scale well so
+        # let's not let this object get too big.
+        if len(self.data) > self.MAX_QUEUE:
+            self.data.popitem(False) # removes the oldest item
+        if len(self._used) > self.MAX_USED:
+            self._used = set()
+
         self.data[entry['id']] = entry
         self._used.add(entry['id'])
 

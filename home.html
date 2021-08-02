@@ -4,8 +4,10 @@
         <title>Wes Game</title>
             <style type="text/css">
 
-            body {font-family: Arial, Helvetica, sans-serif;}
-            * {box-sizing: border-box;}
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: #A8D0A0;
+            }
 
             input[type=text] {
                 padding: 8px;
@@ -62,23 +64,24 @@
                 color:  blue;
             }
 
-            #attack-info {
+            .centered {
                 text-align: center;
-                padding-top: 10px;
-                font-style: italic;
             }
-            #game-area {
-                width: fit-content;
+            .animation-area {
+                display: inline-table;
+            }
+            .reversed {
+                transform: scaleX(-1);
             }
 
         </style>
     </head>
     <body>
         <div class="form-box">
-            <form>
+            <div id="stat-input">
                 <label for="name">Name</label>
                 <br>
-                <input type="text" name="name">
+                <input type="text" name="name" oninput="updateId()">
                 <br>
                 <label for="attack">Attack</label>
                 <br>
@@ -100,14 +103,14 @@
                 <input type="range" min="0" max="25" value="0" class="slider" name="speed" oninput="range('speed')">
                 <label id="speed">0</label>
                 <br>
-                <button type="button" onclick="initiateMatch('computer')">Play Computer</button>
-                <button type="button" onclick="initiateMatch('human')">Play Human</button>
+                <button type="button" onclick="play('computer')">Play Computer</button>
+                <button type="button" onclick="play('human')">Play Human</button>
                 <br>
-                <label class="error">Can't find a human.  Try again</label>
-            </form>
-            <h3 class=pool>Pool <span id="pool">25</span></h3>
+                <label class="error" id="no-human" hidden="true">Can't find a human.  Try again</label>
+            </div>
+            <h3 class=pool>Pool <span id="pool">30</span></h3>
         </div>
-        <div id="game-area">
+        <div id="matchup-tables">
         <div class="game-stats output" id="hero">
             <table>
                 <tr>
@@ -134,7 +137,7 @@
         <div class="versus output">
             <h2>VS</h2>
         </div>
-        <div class="game-stats output" id="villian">
+        <div class="game-stats output" id="villain">
             <table>
                 <tr>
                     <th class="name">Wesley</th>
@@ -157,9 +160,24 @@
                 </tr>
             </table>
         </div>
-        <div id="attack-info">
+    </div>
+    <div class="animation-area output">
+        <div class="animation-area" name="hero">
+            <h2 class="centered" id="hero-hps">12</h2>
+            <img class="hero-gif dodge reversed" src="SwordDodge.gif">
+            <img class="hero-gif attack reversed" src="Sword2.gif" hidden="true">
+            <img class="hero-gif attack reversed" src="Sword3.gif" hidden="true">
+        </div>
+        <div class="animation-area" name="villain">
+            <h2 class="centered" id="villain-hps">12</h2>
+            <img class="villain-gif dodge" src="LanceDodge.gif">
+            <img class="villain-gif attack" src="Lance2.gif" hidden="true">
+            <img class="villain-gif attack" src="Lance3.gif" hidden="true">
+        </div>
+        <div id="action-log">
         </div>
     </div>
+
     </body>
     <script type="text/javascript" src="game.js"></script>
 </html>
