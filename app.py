@@ -1,20 +1,18 @@
 from collections import OrderedDict
 from pprint import pprint
 from contextlib import contextmanager
+import os
 import pickle
 from flask import Flask, request, abort, jsonify
 from werkzeug.exceptions import HTTPException
-from dotenv import dotenv_values
+import dotenv
 import redis
 
-
-#TODO: _used part of queue isnt having desired effect
-
-# grab the .env values to use globably in this module
-_vals = dotenv_values()
-REDIS_PASS = _vals['PASS']
-REDIS_HOST = _vals['HOST']
-REDIS_PORT = _vals['PORT']
+# Grab the .env values to use globably in this module if they are not already in the environment.
+dotenv.load_dotenv()
+REDIS_PASS = os.environ['PASS']
+REDIS_HOST = os.environ['HOST']
+REDIS_PORT = os.environ['PORT']
 
 POOL = 30
 FIELDS = ("attack", "defense", "hps", "speed")

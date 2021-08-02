@@ -10,12 +10,10 @@
             }
 
             input[type=text] {
-                padding: 8px;
+                padding: 5px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 box-sizing: border-box;
-                margin-top: 8px;
-                margin-bottom: 3px;
                 resize: vertical;
             }
 
@@ -40,12 +38,6 @@
             }
             .error {
                 color: red;
-            }
-
-            .pool {
-                margin-top: 100px;
-                margin-left: 30px;
-                float: right;
             }
 
             .output {
@@ -81,8 +73,8 @@
             <div id="stat-input">
                 <label for="name">Name</label>
                 <br>
-                <input type="text" name="name" oninput="updateId()">
-                <br>
+                <input type="text"  autocomplete="off" name="name" oninput="updateId()">
+                <h3>Pool <span id="pool">30</span></h3>
                 <label for="attack">Attack</label>
                 <br>
                 <input type="range" min="1" max="25" value="1" class="slider" name="attack" oninput="range('attack')">
@@ -104,11 +96,13 @@
                 <label id="speed">0</label>
                 <br>
                 <button type="button" onclick="play('computer')">Play Computer</button>
+                <small>play against randomly generated stats</small>
+                <br>
                 <button type="button" onclick="play('human')">Play Human</button>
+                <small>upload your stats and play against someone else's uploaded stats</small>
                 <br>
                 <label class="error" id="no-human" hidden="true">Can't find a human.  Try again</label>
             </div>
-            <h3 class=pool>Pool <span id="pool">30</span></h3>
         </div>
         <div id="matchup-tables">
         <div class="game-stats output" id="hero">
@@ -163,21 +157,21 @@
     </div>
     <div class="animation-area output">
         <div class="animation-area" name="hero">
-            <h2 class="centered" id="hero-hps">12</h2>
-            <img class="hero-gif dodge reversed" src="SwordDodge.gif">
-            <img class="hero-gif attack reversed" src="Sword2.gif" hidden="true">
-            <img class="hero-gif attack reversed" src="Sword3.gif" hidden="true">
+            <h2 class="centered" id="hero-hps">Hps: 12</h2>
+            <img class="hero-gif dodge-gif reversed" src="resources/SwordDodge.gif">
+            <img class="hero-gif attack-gif reversed" src="resources/Sword2.gif" hidden="true">
+            <img class="hero-gif attack-gif reversed" src="resources/Sword3.gif" hidden="true">
         </div>
         <div class="animation-area" name="villain">
-            <h2 class="centered" id="villain-hps">12</h2>
-            <img class="villain-gif dodge" src="LanceDodge.gif">
-            <img class="villain-gif attack" src="Lance2.gif" hidden="true">
-            <img class="villain-gif attack" src="Lance3.gif" hidden="true">
+            <h2 class="centered" id="villain-hps">Hps: 12</h2>
+            <img class="villain-gif dodge-gif" src="resources/LanceDodge.gif">
+            <img class="villain-gif attack-gif" src="resources/Lance2.gif" hidden="true">
+            <img class="villain-gif attack-gif" src="resources/Lance3.gif" hidden="true">
         </div>
         <div id="action-log">
         </div>
     </div>
-
     </body>
+    <script type="text/javascript" src="url.js"></script>
     <script type="text/javascript" src="game.js"></script>
 </html>

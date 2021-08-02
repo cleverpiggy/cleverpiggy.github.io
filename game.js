@@ -2,8 +2,7 @@ const ATTRIBUTES = ["attack", "defense", "hps", "speed"];
 const POOL = 30;
 document.getElementById("pool").innerHTML = POOL;
 ATTACK_TIME = 2500;
-
-const MATCH_URL = "http://127.0.0.1:5000/match"
+ACTION_TIME = ATTACK_TIME + 5;
 
 // Global varibable that mutates every time we edit the stats.
 // That way multiple requests with the same stats don't all
@@ -59,7 +58,7 @@ function playCallback(me, them) {
         alert("You have the same allocations!  Try again.");
         return;
     }
-    const delay = timeout(ATTACK_TIME, 0);
+    const delay = timeout(ACTION_TIME, 0);
     delay(prelude, []);
     delay(animateOrder, [actionSeq[0].attacker, actionSeq[0].defender]);
     for (let attack of actionSeq) {
@@ -132,7 +131,7 @@ function attack(attacker, defender) {
 // stats: hero stats to post to the server
 function matchup(stats) {
     // TODO:  Here we do an http fetch to get the actual opponent
-    return fetch(MATCH_URL, {
+    return fetch("/match", {
         method: "POST",
         body: JSON.stringify(stats),
         headers: {'Content-Type': 'application/json'}
@@ -178,7 +177,7 @@ function randomFoe() {
 
 function nextAttackFactory(className) {
     const gifs = document.getElementsByClassName(className);
-    const attacks = [...gifs].filter(n => n.classList.contains("attack"));
+    const attacks = [...gifs].filter(n => n.classList.contains("attack-gif"));
     var cursor = attacks.length - 1;
     return function () {
         for (let gif of gifs) {
@@ -203,11 +202,11 @@ function reanimateGif(gif) {
 }
 
 function prelude() {
-    for (element of document.getElementsByClassName("attack")) {
+    for (element of document.getElementsByClassName("attack-gif")) {
         element.hidden = true;
     }
-    document.getElementsByClassName("hero-gif dodge")[0].hidden = false;
-    document.getElementsByClassName("villain-gif dodge")[0].hidden = false;
+    document.getElementsByClassName("hero-gif dodge-gif")[0].hidden = false;
+    document.getElementsByClassName("villain-gif dodge-gif")[0].hidden = false;
 }
 
 function animateOrder(first, second) {
@@ -223,6 +222,7 @@ function animateOrder(first, second) {
 
 // attack {attacker, defender, damage}
 function animateAttack(attk) {
+    // Start the gif then set a timeout to show the attack result near the end of the gif sequence.
     showAttackGif[attk.attacker.who]();
     setTimeout(() => {
         console.log(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
@@ -256,7 +256,10 @@ function fillTable(tableId, stats) {
         let elements = table.getElementsByClassName(name);
         // This will skip the 'type' field and any additional non applicable fields that are added.
         if (elements.length == 1) {
+            console.log('setting', name, 'to', stats[name]);
             elements[0].innerHTML = stats[name];
+        } else {
+            console.log('skipping', name);
         }
     }
 }
@@ -264,7 +267,7 @@ function fillTable(tableId, stats) {
 function setHps(who, amount, damage) {
     const id = (who == "hero") ? "hero-hps" : "villain-hps";
     const hpsEle = document.getElementById(id);
-    hpsEle.innerHTML = amount;
+    hpsEle.innerHTML = `Hps: ${amount}`;
     // Have the guy whos hps went down flash red for a second.
     if (damage) {
         hpsEle.style.color = "red";
@@ -335,7 +338,7 @@ function range(name) {
 }
 
 function getPool() {
-    return parseInt(document.getElementById("pool").innerHTML;
+    return parseInt(document.getElementById("pool").innerHTML);
 }
 
 //-------------------------------- utils ----------------------------------------
