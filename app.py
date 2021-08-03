@@ -4,6 +4,7 @@ from contextlib import contextmanager
 import os
 import pickle
 from flask import Flask, request, abort, jsonify
+from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 import dotenv
 import redis
@@ -19,6 +20,19 @@ POOL = 30
 FIELDS = ("attack", "defense", "hps", "speed")
 
 app = Flask(__name__)
+CORS(app)
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization, true')
+    response.headers.add(
+        'Access-Control-Allow-Methods',
+        'GET, POST')
+    return response
+
 
 @app.route('/match', methods=['GET', 'POST'])
 def match():
