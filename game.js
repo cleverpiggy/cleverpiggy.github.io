@@ -54,10 +54,6 @@ function playCallback(me, them) {
     them.who = "villain";
     showGame(me, them);
     const actionSeq = fight(me, them);
-    if (!actionSeq) {
-        alert("You have the same allocations!  Try again.");
-        return;
-    }
     const delay = timeout(ACTION_TIME, 0);
     delay(prelude, []);
     delay(animateOrder, [actionSeq[0].attacker, actionSeq[0].defender]);
@@ -74,10 +70,6 @@ function playCallback(me, them) {
 // Assumes each player passed validate.
 // returns -> the action sequence of the fight
 function fight(p1, p2) {
-    if (symetric(p1, p2)) {
-        return null;
-    }
-
     const order = [null, null];
     var flip = false;
     if (p1.speed == p2.speed) {
@@ -104,15 +96,6 @@ function fight(p1, p2) {
     }
 
     return actionSeq;
-}
-
-function symetric(p1, p2) {
-    for (let field of ATTRIBUTES) {
-        if (p1[field] != p2[field]) {
-            return false;
-        }
-    }
-    return true;
 }
 
 // Modifies defender by the amount of damage he has taken.
@@ -205,8 +188,10 @@ function prelude() {
     for (element of document.getElementsByClassName("attack-gif")) {
         element.hidden = true;
     }
-    document.getElementsByClassName("hero-gif dodge-gif")[0].hidden = false;
-    document.getElementsByClassName("villain-gif dodge-gif")[0].hidden = false;
+    for (let gif of document.getElementsByClassName("dodge-gif")) {
+        gif.hidden = false;
+        reanimateGif(gif);
+    }
 }
 
 function animateOrder(first, second) {
