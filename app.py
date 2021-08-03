@@ -23,7 +23,7 @@ app = Flask(__name__)
 CORS(app, headers='Content-Type')
 
 
-@app.route('/match', methods=['GET', 'POST'])
+@app.route('/match', methods=['POST', 'OPTIONS'])
 def match():
     # Post your own stat to the queue if you haven't yet done so.
     # Grab the oldest post that is not your own and remove it.
