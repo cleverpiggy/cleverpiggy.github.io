@@ -13,6 +13,7 @@ dotenv.load_dotenv()
 REDIS_PASS = os.environ['PASS']
 REDIS_HOST = os.environ['HOST']
 REDIS_PORT = os.environ['PORT']
+DEBUG = os.environ.get('DEBUG')
 
 POOL = 30
 FIELDS = ("attack", "defense", "hps", "speed")
@@ -38,7 +39,8 @@ def match():
 
         if queue.is_new(stats):
             queue.push(stats)
-        queue.print()
+        if DEBUG:
+            queue.print()
         opponent = queue.pop_opponent(stats['name'])
         store.store_queue(queue)
     if not opponent:
@@ -48,16 +50,11 @@ def match():
 
 def verify_and_intify(stats, fields=FIELDS):
 
-    print(stats)
-
     if not "name" in stats and not "id" in stats:
-        print('1')
         return None
     if not all(f in stats for f in fields):
-        print('2')
         return None
     if not all(stats[f].isdigit() for f in fields):
-        print('3')
         return None
 
     # the intify part
@@ -65,13 +62,10 @@ def verify_and_intify(stats, fields=FIELDS):
         stats[f] = int(stats[f])
 
     if not sum(stats[f] for f in fields) == POOL:
-        print('4')
         return None
     if not all(stats[f] >= 0 for f in fields):
-        print('5')
         return None
     if stats['attack'] < 1 or stats['hps'] < 1:
-        print('6')
         return None
 
     return stats
