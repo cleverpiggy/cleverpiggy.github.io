@@ -131,7 +131,7 @@ function attack(attacker, defender) {
 // stats: hero stats to post to the server
 function matchup(stats) {
     // TODO:  Here we do an http fetch to get the actual opponent
-    return fetch("/match", {
+    return fetch(MATCH_URL, {
         method: "POST",
         body: JSON.stringify(stats),
         headers: {'Content-Type': 'application/json'}
