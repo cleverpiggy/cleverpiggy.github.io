@@ -27,6 +27,8 @@ CORS(app, headers='Content-Type')
 def match():
     # Post your own stat to the queue if you haven't yet done so.
     # Grab the oldest post that is not your own and remove it.
+    if request.method == 'OPTIONS':
+        return ""
     stats = request.json
     if not stats:
         abort(422, description='json required')
