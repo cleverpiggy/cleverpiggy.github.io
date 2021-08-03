@@ -20,7 +20,8 @@ POOL = 30
 FIELDS = ("attack", "defense", "hps", "speed")
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, headers='Content-Type')
+
 
 @app.route('/match', methods=['GET', 'POST'])
 def match():
