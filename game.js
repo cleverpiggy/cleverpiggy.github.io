@@ -35,6 +35,7 @@ function play(villain) {
     // to insure our stats are only posted once.
     me.id = postId;
 
+    disablePlayButton();
     matchup(me)
         .then(opponent => {
             if (!opponent) {
@@ -44,7 +45,8 @@ function play(villain) {
                 noHumanMessage(false);
                 playCallback(me, opponent);
             }
-        });
+        })
+        .then(enablePlayButton);
 }
 
 function playCallback(me, them) {
@@ -284,9 +286,6 @@ function noHumanMessage(is_active) {
     const ele = document.getElementById("no-human").hidden = !is_active;
 }
 
-function flashDamage(who) {
-    ;
-}
 
 function extractStats() {
     const stats = {};
@@ -295,6 +294,14 @@ function extractStats() {
         stats[element.name] = element.value;
     }
     return stats;
+}
+
+function disablePlayButton() {
+    document.getElementById("play-human").disabled = true;
+}
+
+function enablePlayButton() {
+    document.getElementById("play-human").disabled = false;
 }
 
 // Custom 'oninput' functionality for the html range sliders

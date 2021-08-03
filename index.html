@@ -2,14 +2,12 @@
 <html>
     <head>
         <title>Wes Game</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style type="text/css">
-
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style type="text/css">
             body {
                 font-family: Arial, Helvetica, sans-serif;
                 background-color: #A8D0A0;
             }
-
             input[type=text] {
                 padding: 5px;
                 border: 1px solid #ccc;
@@ -17,13 +15,11 @@
                 box-sizing: border-box;
                 resize: vertical;
             }
-
             input[type=range] {
                 margin-top: 10px;
                 margin-bottom: 15px;
                 width: 80%;
             }
-
             button {
                 background-color: #4CAF50;
                 color: white;
@@ -34,19 +30,18 @@
                 height: 50px;
                 margin-top: 10px;
             }
-
             button:hover {
                 background-color: #45a049;
             }
-
+            button:disabled {
+                background-color: #cccccc;
+            }
             img {
                 width: 40vw;
             }
-
             .indent {
                 margin-left: 30px;
             }
-
             .input {
                 border: solid;
                 border-width: 1px;
@@ -57,31 +52,22 @@
             .error {
                 color: red;
             }
-
             #output {
                 display:  none;
             }
-
             #play-again {
                 display: none;
                 width: 100%;
             }
-
             .game-stats {
                 display: inline-table;
                 font-size: 20px;
-                /*border-radius: 15px;*/
             }
-
-            #matchup-tables {
-            }
-
             .versus {
                 display: inline-table;
                 padding: 30px;
                 color:  blue;
             }
-
             .centered {
                 text-align: center;
             }
@@ -95,7 +81,6 @@
             .reversed {
                 transform: scaleX(-1);
             }
-
         </style>
     </head>
     <body>
@@ -129,7 +114,7 @@
                 <br>
                 <small class="indent">play against randomly generated stats</small>
                 <br>
-                <button type="button" class="indent" onclick="play('human')">Play Human</button>
+                <button type="button" class="indent" id="play-human" onclick="play('human')">Play Human</button>
                 <br>
                 <small class="indent">upload your stats and play against someone else's uploaded stats</small>
                 <br>
