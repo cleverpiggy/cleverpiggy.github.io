@@ -39,6 +39,10 @@
                 background-color: #45a049;
             }
 
+            img {
+                width: 40vw;
+            }
+
             .indent {
                 margin-left: 30px;
             }
@@ -56,7 +60,6 @@
 
             #output {
                 display:  none;
-                width: 100%;
             }
 
             #play-again {
@@ -67,7 +70,10 @@
             .game-stats {
                 display: inline-table;
                 font-size: 20px;
-                border-radius: 15px;
+                /*border-radius: 15px;*/
+            }
+
+            #matchup-tables {
             }
 
             .versus {
@@ -80,6 +86,10 @@
                 text-align: center;
             }
             .animation-area {
+                border: solid;
+                border-width: 1px;
+            }
+            .animated-character {
                 display: inline-table;
             }
             .reversed {
@@ -127,6 +137,20 @@
             </div>
         </div>
         <div id="output">
+            <div class="animation-area">
+                <div class="animated-character" name="hero">
+                    <h2 class="centered" id="hero-hps">12 Hps</h2>
+                    <img class="hero-gif dodge-gif reversed" src="resources/SwordDodge.gif">
+                    <img class="hero-gif attack-gif reversed" src="resources/Sword2.gif" hidden="true">
+                    <img class="hero-gif attack-gif reversed" src="resources/Sword3.gif" hidden="true">
+                </div>
+                <div class="animated-character" name="villain">
+                    <h2 class="centered" id="villain-hps">12 Hps</h2>
+                    <img class="villain-gif dodge-gif" src="resources/LanceDodge.gif">
+                    <img class="villain-gif attack-gif" src="resources/Lance2.gif" hidden="true">
+                    <img class="villain-gif attack-gif" src="resources/Lance3.gif" hidden="true">
+                </div>
+            </div>
             <div id="matchup-tables">
                 <div class="game-stats" id="hero">
                     <table>
@@ -176,20 +200,6 @@
                             <td class="speed">0</td>
                         </tr>
                     </table>
-                </div>
-            </div>
-            <div class="animation-area">
-                <div class="animation-area" name="hero">
-                    <h2 class="centered" id="hero-hps">Hps: 12</h2>
-                    <img class="hero-gif dodge-gif reversed" src="resources/SwordDodge.gif">
-                    <img class="hero-gif attack-gif reversed" src="resources/Sword2.gif" hidden="true">
-                    <img class="hero-gif attack-gif reversed" src="resources/Sword3.gif" hidden="true">
-                </div>
-                <div class="animation-area" name="villain">
-                    <h2 class="centered" id="villain-hps">Hps: 12</h2>
-                    <img class="villain-gif dodge-gif" src="resources/LanceDodge.gif">
-                    <img class="villain-gif attack-gif" src="resources/Lance2.gif" hidden="true">
-                    <img class="villain-gif attack-gif" src="resources/Lance3.gif" hidden="true">
                 </div>
                 <div id="action-log">
                 </div>

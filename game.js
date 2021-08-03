@@ -259,7 +259,7 @@ function fillTable(tableId, stats) {
 function setHps(who, amount, damage) {
     const id = (who == "hero") ? "hero-hps" : "villain-hps";
     const hpsEle = document.getElementById(id);
-    hpsEle.innerHTML = `Hps: ${amount}`;
+    hpsEle.innerHTML = `${amount} Hps`;
     // Have the guy whos hps went down flash red for a second.
     if (damage) {
         hpsEle.style.color = "red";
