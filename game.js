@@ -256,10 +256,7 @@ function fillTable(tableId, stats) {
         let elements = table.getElementsByClassName(name);
         // This will skip the 'type' field and any additional non applicable fields that are added.
         if (elements.length == 1) {
-            console.log('setting', name, 'to', stats[name]);
             elements[0].innerHTML = stats[name];
-        } else {
-            console.log('skipping', name);
         }
     }
 }
