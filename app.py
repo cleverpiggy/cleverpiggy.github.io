@@ -22,18 +22,6 @@ FIELDS = ("attack", "defense", "hps", "speed")
 app = Flask(__name__)
 CORS(app)
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://cleverpiggy.github.io')
-    response.headers.add(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization, true')
-    response.headers.add(
-        'Access-Control-Allow-Methods',
-        'GET, POST')
-    return response
-
-
 @app.route('/match', methods=['GET', 'POST'])
 def match():
     # Post your own stat to the queue if you haven't yet done so.
