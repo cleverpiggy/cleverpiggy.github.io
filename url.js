@@ -1,1 +1,1 @@
-const MATCH_URL = "http://127.0.0.1:8000/match"
+const MATCH_URL = "https://wes-game.herokuapp.com/match"
