@@ -9,12 +9,8 @@
                 font-family: Arial, Helvetica, sans-serif;
                 background-color: #A8D0A0;
             }
-            label {
-                margin-left: 30px;
-            }
 
             input[type=text] {
-                margin-left: 30px;
                 padding: 5px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
@@ -25,8 +21,7 @@
             input[type=range] {
                 margin-top: 10px;
                 margin-bottom: 15px;
-                margin-left: 30px;
-                width: 100%;
+                width: 80%;
             }
 
             button {
@@ -37,7 +32,6 @@
                 cursor: pointer;
                 width: 100px;
                 height: 50px;
-                margin-left: 30px;
                 margin-top: 10px;
             }
 
@@ -45,7 +39,7 @@
                 background-color: #45a049;
             }
 
-            h3 {
+            .indent {
                 margin-left: 30px;
             }
 
@@ -67,7 +61,6 @@
 
             #play-again {
                 display: none;
-                margin-left: 100px;
                 width: 300px;
             }
 
@@ -75,13 +68,6 @@
                 display: inline-table;
                 font-size: 20px;
                 border-radius: 15px;
-            }
-
-            #hero {
-                margin-left: 100px;
-            }
-            #action-log {
-                margin-left: 100px;
             }
 
             .versus {
@@ -105,37 +91,39 @@
     <body>
         <div class="input">
             <div id="stat-input">
-                <label for="name">Name</label>
+                <label for="name" class="indent">Name</label>
                 <br>
-                <input type="text"  autocomplete="off" name="name" oninput="updateId()">
-                <h3>Pool <span id="pool">30</span></h3>
-                <label for="attack">Attack</label>
+                <input type="text"  class="indent" autocomplete="off" name="name" oninput="updateId()">
+                <h3 class="indent">Pool <span id="pool">30</span></h3>
+                <label for="attack" class="indent">Attack</label>
                 <br>
-                <input type="range" min="1" max="25" value="1" class="slider" name="attack" oninput="range('attack')">
+                <input type="range" min="1" max="25" value="1" class="slider indent" name="attack" oninput="range('attack')">
                 <label id="attack">1</label>
                 <br>
-                <label for="defense">Defense</label>
+                <label for="defense" class="indent">Defense</label>
                 <br>
-                <input type="range" min="0" max="25" value="0" class="slider" name="defense" oninput="range('defense')">
+                <input type="range" min="0" max="25" value="0" class="slider indent" name="defense" oninput="range('defense')">
                 <label id="defense">0</label>
                 <br>
-                <label for="hps">Hps</label>
+                <label for="hps" class="indent">Hps</label>
                 <br>
-                <input type="range" min="1" max="25" value="1" class="slider" name="hps" oninput="range('hps')">
+                <input type="range" min="1" max="25" value="1" class="slider indent" name="hps" oninput="range('hps')">
                 <label id="hps">1</label>
                 <br>
-                <label for="speed">Speed</label>
+                <label for="speed" class="indent">Speed</label>
                 <br>
-                <input type="range" min="0" max="25" value="0" class="slider" name="speed" oninput="range('speed')">
+                <input type="range" min="0" max="25" value="0" class="slider indent" name="speed" oninput="range('speed')">
                 <label id="speed">0</label>
                 <br>
-                <button type="button" onclick="play('computer')">Play Computer</button>
-                <small>play against randomly generated stats</small>
+                <button type="button" class="indent" onclick="play('computer')">Play Computer</button>
                 <br>
-                <button type="button" onclick="play('human')">Play Human</button>
-                <small>upload your stats and play against someone else's uploaded stats</small>
+                <small class="indent">play against randomly generated stats</small>
                 <br>
-                <label class="error" id="no-human" hidden="true">Can't find a human.  Try again</label>
+                <button type="button" class="indent" onclick="play('human')">Play Human</button>
+                <br>
+                <small class="indent">upload your stats and play against someone else's uploaded stats</small>
+                <br>
+                <label class="error indent" id="no-human" hidden="true">Can't find a human.  Try again</label>
             </div>
         </div>
         <div id="output">
