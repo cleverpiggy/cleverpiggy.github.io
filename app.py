@@ -101,6 +101,7 @@ class Store:
 
     @contextmanager
     def get_queue(self):
+        acquired = False
         try:
             lock = self.redis.lock('key', blocking_timeout=1)
             acquired = lock.acquire()
