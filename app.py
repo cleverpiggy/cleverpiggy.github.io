@@ -36,6 +36,13 @@ def match():
     if stats is None:
         abort(422, description='invalid stats')
 
+    return jsonify({'success': True, 'villain': {
+        'name': 'Fred',
+        'attack': 10,
+        'defense': 5,
+        'hps': 14,
+        'speed': 1
+        }})
     store = Store()
 
     with store.get_queue() as queue:
