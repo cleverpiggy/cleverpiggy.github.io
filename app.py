@@ -11,9 +11,7 @@ import redis
 
 # Grab the .env values to use globably in this module if they are not already in the environment.
 dotenv.load_dotenv()
-REDIS_PASS = os.environ['PASS']
-REDIS_HOST = os.environ['HOST']
-REDIS_PORT = os.environ['PORT']
+REDIS_URL = os.environ['REDIS_URL']
 DEBUG = os.environ.get('DEBUG')
 
 POOL = 30
@@ -36,13 +34,6 @@ def match():
     if stats is None:
         abort(422, description='invalid stats')
 
-    return jsonify({'success': True, 'villain': {
-        'name': 'Fred',
-        'attack': 10,
-        'defense': 5,
-        'hps': 14,
-        'speed': 1
-        }})
     store = Store()
 
     with store.get_queue() as queue:
@@ -95,7 +86,7 @@ def error_handler(error):
 
 class Store:
     def __init__(self):
-        self.redis = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
+        self.redis = redis.from_url(REDIS_URL)
 
     @contextmanager
     def get_queue(self):
