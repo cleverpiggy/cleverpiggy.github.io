@@ -1,8 +1,7 @@
+const ACTION_TIME = 2500;
 const ATTRIBUTES = ["attack", "defense", "hps", "speed"];
 const POOL = 30;
 document.getElementById("pool").innerHTML = POOL;
-ATTACK_TIME = 2500;
-ACTION_TIME = ATTACK_TIME + 5;
 
 // Global varibable that mutates every time we edit the stats.
 // That way multiple requests with the same stats don't all
@@ -53,17 +52,18 @@ function playCallback(me, them) {
     me.who = "hero";
     them.who = "villain";
     showGame(me, them);
-    const actionSeq = fight(me, them);
-    const delay = timeout(ACTION_TIME, 0);
-    delay(prelude, []);
-    delay(animateOrder, [actionSeq[0].attacker, actionSeq[0].defender]);
-    for (let attack of actionSeq) {
-        delay(animateAttack, [attack]);
-    }
 
+    const fightSeq = fight(me, them);
+    const actionSeq = new ActionSequence();
+    actionSeq.push(prelude, ACTION_TIME);
+    actionSeq.push(animateOrder, ACTION_TIME, [fightSeq[0].attacker, fightSeq[0].defender]);
+    for (let attack of fightSeq) {
+        actionSeq.push(animateAttack, ACTION_TIME, [attack]);
+    }
     // The guy who attacked last obviously won.
-    const winner = actionSeq.pop().attacker;
-    delay(animateWin, [winner]);
+    const winner = fightSeq.pop().attacker;
+    actionSeq.push(animateWin, 0, [winner]);
+    actionSeq.execute();
 }
 
 // p1, p2: stat field of each player
@@ -213,23 +213,33 @@ function animateAttack(attk) {
         console.log(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
         actionLog(`${attk.attacker.name} deals ${attk.damage} damage.  ${attk.defender.name}'s hps are reduced to ${attk.defender.hps}`);
         setHps(attk.defender.who, attk.defender.hps, true);
-    }, ATTACK_TIME);
+    }, ACTION_TIME);
 }
 
 function animateWin(winner) {
     console.log(`${winner.name} wins!`);
     actionLog(`${winner.name} wins!`);
+    document.getElementById("play-again").style.display = "inherit";
 }
 
 function showGame(heroStats, villainStats) {
 
+    for (let e of document.getElementsByClassName("input")) {
+        e.style.display = "none";
+    }
     clearLog();
     fillTable("hero", heroStats);
     fillTable("villain", villainStats);
     setHps("hero", heroStats.hps);
     setHps("villain", villainStats.hps);
-    for (let e of document.getElementsByClassName("output")) {
-        e.style.visibility = "visible";
+    document.getElementById("output").style.display = "initial";
+}
+
+function playAgain() {
+    document.getElementById("output").style.display = "none";
+    document.getElementById("play-again").style.display = "none";
+    for (let e of document.getElementsByClassName("input")) {
+        e.style.display = "flex";
     }
 }
 
@@ -337,20 +347,35 @@ function generateId() {
     return Math.round(Math.random() * 1000000000);
 }
 
-// Return a settimeout function that increments its
-// timeout every call.  Optionally set an initial timeout
-// with the second parameter.  Otherwise the first call
-// happens immediately.
-function timeout(increment, initial) {
-    var t = (initial) ? initial : 0;
-    var output = function(callback, args) {
-        const args_ = args ? args : [];
-        setTimeout(callback, t, ...args_);
-        t += increment;
-    }
-    return output;
-}
 
 function clone(obj) {
     return Object.assign({}, obj);
+}
+
+
+function ActionSequence() {
+    this.actions = [];
+}
+
+// func: (required) function
+// timeout: (default 0) in milliseconds
+// args: (optional) Array of args for func
+ActionSequence.prototype.push = function(func, timeout, args) {
+    this.actions.push({
+        func: func,
+        timeout: timeout ? timeout : 0,
+        args: args ? args : [],
+    });
+};
+
+ActionSequence.prototype.execute = function() {
+    const loop = function(actions) {
+        if (actions.length == 0) {
+            return;
+        }
+        const action = actions[0]
+        action.func(...action.args);
+        setTimeout(() => loop(actions.slice(1)), action.timeout);
+    }
+    loop(this.actions);
 }

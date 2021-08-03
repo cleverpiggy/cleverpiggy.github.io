@@ -8,13 +8,24 @@
                 font-family: Arial, Helvetica, sans-serif;
                 background-color: #A8D0A0;
             }
+            label {
+                margin-left: 30px;
+            }
 
             input[type=text] {
+                margin-left: 30px;
                 padding: 5px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 box-sizing: border-box;
                 resize: vertical;
+            }
+
+            input[type=range] {
+                margin-top: 10px;
+                margin-bottom: 15px;
+                margin-left: 30px;
+                width: 200px;
             }
 
             button {
@@ -23,33 +34,54 @@
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
+                width: 100px;
+                height: 50px;
+                margin-left: 30px;
+                margin-top: 10px;
             }
 
             button:hover {
                 background-color: #45a049;
             }
 
-            .form-box {
+            h3 {
+                margin-left: 30px;
+            }
+
+            .input {
                 border: solid;
                 border-width: 1px;
-                background-color: #f2f2f2;
                 padding: 5px;
                 display: flex;
+                width: 600px;
             }
             .error {
                 color: red;
             }
 
-            .output {
-                visibility: hidden;
+            #output {
+                display:  none;
+            }
+
+            #play-again {
+                display: none;
+                margin-left: 100px;
+                width: 300px;
             }
 
             .game-stats {
                 display: inline-table;
                 font-size: 20px;
-                padding: 10px;
                 border-radius: 15px;
             }
+
+            #hero {
+                margin-left: 100px;
+            }
+            #action-log {
+                margin-left: 100px;
+            }
+
             .versus {
                 display: inline-table;
                 padding: 30px;
@@ -69,7 +101,7 @@
         </style>
     </head>
     <body>
-        <div class="form-box">
+        <div class="input">
             <div id="stat-input">
                 <label for="name">Name</label>
                 <br>
@@ -104,73 +136,76 @@
                 <label class="error" id="no-human" hidden="true">Can't find a human.  Try again</label>
             </div>
         </div>
-        <div id="matchup-tables">
-        <div class="game-stats output" id="hero">
-            <table>
-                <tr>
-                    <th class="name">Allen</th>
-                </tr>
-                <tr>
-                    <td>Attack</td>
-                    <td class="attack">8</td>
-                </tr>
-                <tr>
-                    <td>Defense</td>
-                    <td class="defense">8</td>
-                </tr>
-                <tr>
-                    <td>Hps</td>
-                    <td class="hps">4</td>
-                </tr>
-                <tr>
-                    <td>Speed</td>
-                    <td class="speed">0</td>
-                </tr>
-            </table>
+        <div id="output">
+            <div id="matchup-tables">
+                <div class="game-stats" id="hero">
+                    <table>
+                        <tr>
+                            <th class="name">Allen</th>
+                        </tr>
+                        <tr>
+                            <td>Attack</td>
+                            <td class="attack">8</td>
+                        </tr>
+                        <tr>
+                            <td>Defense</td>
+                            <td class="defense">8</td>
+                        </tr>
+                        <tr>
+                            <td>Hps</td>
+                            <td class="hps">4</td>
+                        </tr>
+                        <tr>
+                            <td>Speed</td>
+                            <td class="speed">0</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="versus">
+                    <h2>VS</h2>
+                </div>
+                <div class="game-stats" id="villain">
+                    <table>
+                        <tr>
+                            <th class="name">Wesley</th>
+                        </tr>
+                        <tr>
+                            <td>Attack</td>
+                            <td class="attack">8</td>
+                        </tr>
+                        <tr>
+                            <td>Defense</td>
+                            <td class="defense">8</td>
+                        </tr>
+                        <tr>
+                            <td>Hps</td>
+                            <td class="hps">4</td>
+                        </tr>
+                        <tr>
+                            <td>Speed</td>
+                            <td class="speed">0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="animation-area">
+                <div class="animation-area" name="hero">
+                    <h2 class="centered" id="hero-hps">Hps: 12</h2>
+                    <img class="hero-gif dodge-gif reversed" src="resources/SwordDodge.gif">
+                    <img class="hero-gif attack-gif reversed" src="resources/Sword2.gif" hidden="true">
+                    <img class="hero-gif attack-gif reversed" src="resources/Sword3.gif" hidden="true">
+                </div>
+                <div class="animation-area" name="villain">
+                    <h2 class="centered" id="villain-hps">Hps: 12</h2>
+                    <img class="villain-gif dodge-gif" src="resources/LanceDodge.gif">
+                    <img class="villain-gif attack-gif" src="resources/Lance2.gif" hidden="true">
+                    <img class="villain-gif attack-gif" src="resources/Lance3.gif" hidden="true">
+                </div>
+                <div id="action-log">
+                </div>
+            </div>
         </div>
-        <div class="versus output">
-            <h2>VS</h2>
-        </div>
-        <div class="game-stats output" id="villain">
-            <table>
-                <tr>
-                    <th class="name">Wesley</th>
-                </tr>
-                <tr>
-                    <td>Attack</td>
-                    <td class="attack">8</td>
-                </tr>
-                <tr>
-                    <td>Defense</td>
-                    <td class="defense">8</td>
-                </tr>
-                <tr>
-                    <td>Hps</td>
-                    <td class="hps">4</td>
-                </tr>
-                <tr>
-                    <td>Speed</td>
-                    <td class="speed">0</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="animation-area output">
-        <div class="animation-area" name="hero">
-            <h2 class="centered" id="hero-hps">Hps: 12</h2>
-            <img class="hero-gif dodge-gif reversed" src="resources/SwordDodge.gif">
-            <img class="hero-gif attack-gif reversed" src="resources/Sword2.gif" hidden="true">
-            <img class="hero-gif attack-gif reversed" src="resources/Sword3.gif" hidden="true">
-        </div>
-        <div class="animation-area" name="villain">
-            <h2 class="centered" id="villain-hps">Hps: 12</h2>
-            <img class="villain-gif dodge-gif" src="resources/LanceDodge.gif">
-            <img class="villain-gif attack-gif" src="resources/Lance2.gif" hidden="true">
-            <img class="villain-gif attack-gif" src="resources/Lance3.gif" hidden="true">
-        </div>
-        <div id="action-log">
-        </div>
-    </div>
+        <button id="play-again" onclick="playAgain()">Play Again</button>
     </body>
     <script type="text/javascript" src="url.js"></script>
     <script type="text/javascript" src="game.js"></script>
