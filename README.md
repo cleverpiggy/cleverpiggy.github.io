@@ -7,7 +7,7 @@ This project implements Wesley's Game with 4 variable (attack, defense, hps, spe
 
 I've implemented it as a static site.  That means if you download the code (using the button at the top of this page) you just have to open the index.html file with a browser and you will have a fully functioning local version.  The opponent match code is in app.py and is running on a cloud server.  It will still work on your home version if you are connected to the internet.
 
-One thing to try might be to change the GIF animations.  If you make or find your own battle gifs, it doesn't take much code to insert it into the site.
+One thing to try might be to change the GIF animations.  If you make or [*find*](https://github.com/Klokinator/FE-Repo/tree/main/Battle%20Animations) your own battle gifs, it doesn't take much code to insert it into the site.
 1. The animations should be around 2.5 seconds each.
 2. Put your Gifs in the `/resources` folder.
 3. Open `index.html` in a text editor and go to around line 128.  You will find 3 image tags that start with `<img class="hero-gif` and shortly below 3 more that start with `<img class="villain-gif`  Those represent the different animated attack sequences that the left and right fighter respectively cycle through.
