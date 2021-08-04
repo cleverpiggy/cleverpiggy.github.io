@@ -1,7 +1,7 @@
 # wes-game
 Wesley's Game
 
-This project implements Wesley's Game with 4 variable (attack, defense, hps, speed).  Currently you can play vs randomly generated opponent stats or match up against stats uploaded by another player.  After connecting you get to view the matchup and watch the fight.  Battle animations from the https://github.com/Klokinator/FE-Repo repo.
+This project implements Wesley's Game with 4 variable (attack, defense, hps, speed).  Currently you can play vs randomly generated opponent stats or match up against stats uploaded by another player.  After connecting you get to view the matchup and watch the fight.  Battle animations from https://github.com/Klokinator/FE-Repo.
 
 ## Hacking at home
 
